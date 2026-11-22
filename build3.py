@@ -89,19 +89,21 @@ ZHK = {'Why Saweli': '为什么选择萨维利', 'What we do': '我们的服务'
 import re
 def zhk(h):
     return re.sub(r'(<span class="kicker[^"]*">)([^<]+)(</span>)', lambda m: m.group(1) + m.group(2) + (f'<span class="zh" lang="zh">{ZHK[m.group(2)]}</span>' if m.group(2) in ZHK else '') + m.group(3), h)
-def page(path, title, desc, body, cur='', light=False, og='/og.jpg', extra_js=''):
+def page(path, title, desc, body, cur='', light=False, og='/og.jpg', extra_js='', lcp=None):
     url = SITE + path
+    preload = f'<link rel="preload" as="image" href="/img/{lcp}-1600.jpg" imagesrcset="/img/{lcp}-800.jpg 800w, /img/{lcp}-1600.jpg 1600w" imagesizes="100vw" fetchpriority="high">' if lcp else ''
+    crumbs = '' if path in ('/', '/404') else json.dumps({'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': SITE + '/'}, {'@type': 'ListItem', 'position': 2, 'name': title.split(' | ')[0].split(':')[0], 'item': url}]})
     ld = {"@context": "https://schema.org", "@type": "Organization", "name": "Saweli", "url": SITE, "logo": SITE + LOGO_C,
           "telephone": PHONE, "email": EMAIL, "areaServed": ["Somalia", "Kenya", "Tanzania", "Ethiopia", "Uganda", "Djibouti", "China"]}
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{E(title)}</title><meta name="description" content="{E(desc)}"><link rel="canonical" href="{url}">
 <meta property="og:type" content="website"><meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}{og}"><meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#1B1410"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#1B1410">{preload}<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" hreflang="en" href="{SITE}/"><link rel="alternate" hreflang="zh" href="{SITE}/zh/"><link rel="alternate" hreflang="so" href="{SITE}/so/"><link rel="alternate" hreflang="sw" href="{SITE}/sw/">
-<link rel="preload" href="/assets/fonts/bigshoulders.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=6"><script type="application/ld+json">{json.dumps(ld)}</script></head>
-<body><a class="skip" href="#main">Skip to content</a>{LOADER}{header(cur, light)}<main id="main">{zhk(body)}</main>{footer()}
-<script src="/assets/app.js?v=6" defer></script>{extra_js}</body></html>'''
+<link rel="preload" href="/assets/fonts/jakarta.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css?v=7"><script type="application/ld+json">{json.dumps(ld)}</script>{f'<script type="application/ld+json">{crumbs}</script>' if crumbs else ''}<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:site_name" content="Saweli"></head>
+<body><a class="skip" href="#main">Skip to content</a>{header(cur, light)}<main id="main">{zhk(body)}</main>{footer()}
+<script src="/assets/app.js?v=7" defer></script>{extra_js}</body></html>'''
 
 def phero(k, crumb, h, lede, meta=None, extra=''):
     zh = ZHP.get(crumb, '')
@@ -188,15 +190,18 @@ def film_block(mode='play'):
             'zhStep': ['下单', '核实', '验货', '运输', '付款'], 'imgBase': '/img/', 'imgExt': '-1600.jpg', 'audio': '/media/film-audio.m4a',
             'bg': ['containers_aerial', 'cn_market', 'cn_factorywoman', 'cn_inspector', 'ship_aerial', 'mog_port', 'hero_port'], 'zhTitle': ['告诉我们您的需求', '我们核实供应商', '货物发运前先验货', '运抵您的港口', '通过合作银行付款']}
     if mode == 'scroll':
-        return (f'<section class="scrollfilm" aria-label="How Saweli works, film"><div class="sticky"><div class="film" data-mode="scroll"><div class="ui"><div class="chap"></div><button class="snd" type="button" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w1" d="M16.5 8.5a5 5 0 0 1 0 7"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg><span>Sound on</span></button></div>'
-                f'<div class="hint"><span>Scroll to play</span><i></i></div></div></div></section><script type="application/json" id="film-data">{json.dumps(data)}</script>')
+        snd = '<button class="snd" type="button" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w1" d="M16.5 8.5a5 5 0 0 1 0 7"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg><span>Sound</span></button>'
+        return (f'<section class="scrollfilm" id="film" aria-label="How Saweli works, film"><div class="sticky"><div class="stage"><div class="film" data-mode="scroll"><div class="ui"><button class="pp" type="button" aria-label="Play"></button><div class="chap"></div>{snd}</div></div>'
+                f'<button class="tapsound" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>Tap for sound</button></div></div></section>'
+                f'<script type="application/json" id="film-data">{json.dumps(data)}</script>')
     return (f'<div class="film r"><div class="ui"><button class="pp" type="button" aria-label="Play"></button><div class="chap"></div><button class="snd" type="button" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w1" d="M16.5 8.5a5 5 0 0 1 0 7"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg><span>Sound</span></button></div></div>'
             f'<script type="application/json" id="film-data">{json.dumps(data)}</script>')
-FILMJS = '<script src="/assets/film.js?v=6" defer></script>'
+FILMJS = '<script src="/assets/film.js?v=7" defer></script>'
 
 # ------------------------------------------------------------------ pages
 def home():
-    slides = [('cn_market', 'Wholesale market, Yiwu'), ('hero_port', 'Container terminal, China'), ('ship_aerial', 'Indian Ocean crossing'), ('mog_sea', 'Mogadishu'), ('trader_phone', 'Market trader, Dar es Salaam')]
+    slides = [('cn_market', 'Wholesale market, Yiwu, China'), ('cn_line', 'Factory floor, Zhejiang, China'), ('hero_port', 'Container terminal, China'), ('ship_aerial', 'Crossing the Indian Ocean'),
+              ('mog_port', 'Port of Mogadishu, Somalia'), ('tz_containers', 'Container yard, East Africa'), ('dar_port', 'Port of Dar es Salaam, Tanzania'), ('nbo_skyline', 'Nairobi, Kenya')]
     sl = ''.join(f'<div class="slide{" on" if i == 0 else ""}" data-cap="{E(c)}">{img(k, c, 1600, lazy=i > 0)}</div>' for i, (k, c) in enumerate(slides))
     dots = ''.join(f'<button type="button" class="{"on" if i == 0 else ""}" aria-label="Photo {i+1}"><i></i></button>' for i in range(len(slides)))
     lanes = [('Yiwu', 'Mogadishu', 'Household goods'), ('Shenzhen', 'Nairobi', 'Phones, by air'), ('Ningbo', 'Mombasa', 'Solar panels'), ('Guangzhou', 'Dar es Salaam', 'Textiles'),
@@ -212,7 +217,7 @@ def home():
     mq2 = ''.join(f'<figure>{img(k, n, 800, "300px")}<figcaption>{E(n)}</figcaption></figure>' for k, n, _, _ in EA + [('market_greens', 'Market produce', '', ''), ('coffee_sack', 'Coffee sacks', '', '')]) * 2
     body = f'''<section class="hero" aria-label="Saweli"><div class="slides">{sl}</div><div class="hin"><div class="wrap"><p class="zh-line r d1" lang="zh">两个市场的交汇处</p><h1 data-split=".1">Where two markets <em>meet</em></h1>
 <div class="row"><div><p class="lede r d3">Buy from China and sell to China with every step checked: verified suppliers, goods inspected before they ship, freight to East African ports and payment through partner banks.</p>
-<div class="ctas r d4"><a class="btn" href="/contact/">Start an order {AR}</a><a class="btn ghost" href="/how-it-works/">Watch how it works</a></div></div>
+<div class="ctas r d4"><a class="btn" href="/contact/">Start an order {AR}</a><a class="btn ghost" href="#film">Watch how it works</a></div></div>
 <div class="cap r d4"><span class="t">{E(slides[0][1])}</span><div class="dots">{dots}</div></div></div></div></div><div class="scroll-cue" aria-hidden="true"></div>
 <div class="ticker" aria-hidden="true"><div class="tr">{tk}</div></div></section>
 <section class="sec"><div class="wrap"><span class="kicker r">Why Saweli</span><p class="statement">East Africa buys phones, solar and building materials from China. China buys coffee, sesame and frankincense from East Africa. Most of that trade still runs on trust and a phone number. <em>We put a checked record behind every order.</em></p>
@@ -229,7 +234,7 @@ def home():
 <section class="banks"><div class="bg" data-par=".1">{img('handshake', '', 1600)}</div><div class="wrap"><div class="box"><span class="kicker lt r">For banks</span><h2 data-split>Know what you are paying for</h2><p class="lede r" style="color:rgba(255,255,255,.85)">Banks in East Africa use Saweli to check the customer, the supplier and the documents behind a trade payment before it is released.</p><a class="btn lite r" href="/banks/">How it works for banks {AR}</a></div></div></section>
 <section class="sec"><div class="wrap faqwrap"><div><span class="kicker r">Questions</span><h2 data-split>Good to know</h2><p class="lede mut r" style="margin-top:20px">Something else? Call us on <a class="link" href="tel:{TEL}">{PHONE}</a></p></div>{faq()}</div></section>
 {cta_end()}'''
-    return page('/', 'Saweli: trade between East Africa and China', 'Buy from China and sell to China with every step checked: verified suppliers, goods inspected before they ship, freight to East African ports and payment through partner banks.', body, '/', extra_js=FILMJS)
+    return page('/', 'Saweli: trade between East Africa and China', 'Buy from China and sell to China with every step checked: verified suppliers, goods inspected before they ship, freight to East African ports and payment through partner banks.', body, '/', extra_js=FILMJS, lcp='cn_market')
 
 def how():
     det = [['Product, quantity and target price', 'The port or city you want it delivered to', 'An existing supplier, if you have one'],
@@ -248,7 +253,7 @@ def how():
 <div class="cards">{"".join(f'<div class="card r d{i%3}"><div class="ico">{ic(c)}</div><h3>{E(t)}</h3><p>{E(d)}</p></div>' for i,(c,t,d) in enumerate([('doc','Quote','Goods, inspection, freight and fees, line by line.'),('shield','Supplier check','Licence, factory and export history, with the result.'),('eye','Inspection report','Quantity, quality and packing, with photos.'),('ship','Shipping documents','Bill of lading, commercial invoice and packing list.'),('bank','Bank record','The payment, with the documents it was released against.'),('clock','Order timeline','Every step, dated, under one reference.')]))}</div></div></section>
 <section class="sec"><div class="wrap faqwrap"><div><span class="kicker r">Questions</span><h2 data-split>About the process</h2></div>{faq()}</div></section>
 {cta_end()}'''
-    return page('/how-it-works/', 'How Saweli works: order, verify, inspect, ship, pay', 'Six steps under one order reference: sourcing, supplier checks, inspection before shipping, freight to East African ports and payment through partner banks.', body, '/how-it-works/', extra_js=FILMJS)
+    return page('/how-it-works/', 'How Saweli works: order, verify, inspect, ship, pay', 'Six steps under one order reference: sourcing, supplier checks, inspection before shipping, freight to East African ports and payment through partner banks.', body, '/how-it-works/', extra_js=FILMJS, lcp='cn_inspector')
 
 def sourcing():
     body = f'''{phero('cn_wholesale', 'Sourcing', 'The right supplier, <em>checked</em> before you pay', 'We search the wholesale markets and factory towns of China, compare offers and check the supplier before any money moves. For exporters, we find buyers in China and prepare the goods for them.', [('Yiwu', 'small commodities'), ('Guangzhou', 'textiles and parts'), ('Shenzhen', 'electronics')])}
@@ -263,7 +268,7 @@ def sourcing():
 <section class="sec dark"><div class="wrap"><div class="head"><div><span class="kicker r">Supplier checks</span><h2 data-split>What we check before you pay</h2></div><p class="lede mut r">A supplier that fails any of these checks does not get your order.</p></div>
 <div class="cards">{"".join(f'<div class="card r d{i%3}"><div class="ico">{ic(c)}</div><h3>{E(t)}</h3><p>{E(d)}</p></div>' for i,(c,t,d) in enumerate([('doc','Registration','Business licence, registered name and the person who signs.'),('pin','Factory','A visit or a live video walk through the production line.'),('globe','Export history','Past shipments abroad and the markets they went to.'),('users','References','Other buyers who have ordered from the same supplier.'),('box','Samples','Product samples checked against your specification.'),('shield','Bank details','The receiving account matches the registered company.')]))}</div></div></section>
 {cta_end('Tell us what to <em>find</em>', 'Send a product name, a photo or a link. We come back with suppliers, samples and a quote.')}'''
-    return page('/sourcing/', 'Sourcing from China and selling to China | Saweli', 'Verified suppliers in Yiwu, Guangzhou and Shenzhen, samples before you order, and buyers in China for East African coffee, sesame and frankincense.', body, '/sourcing/')
+    return page('/sourcing/', 'Sourcing from China and selling to China | Saweli', 'Verified suppliers in Yiwu, Guangzhou and Shenzhen, samples before you order, and buyers in China for East African coffee, sesame and frankincense.', body, '/sourcing/', lcp='cn_wholesale')
 
 def logistics():
     modes = [('ship_aerial2', 'Sea freight', 'Full containers and shared loads from Ningbo, Shanghai, Shenzhen and Guangzhou to Mogadishu, Mombasa, Dar es Salaam and Djibouti.'),
@@ -286,7 +291,7 @@ def logistics():
 <div><span class="kicker r">Paperwork</span><h2 data-split>Documents that travel with the goods</h2><p class="lede mut r">Customs delays usually start with missing papers. We prepare them with the supplier and check them before the ship leaves.</p>
 <ul class="checks r"><li>Bill of lading or air waybill</li><li>Commercial invoice and packing list</li><li>Certificate of origin where it is needed</li><li>Inspection report attached to the order</li></ul><a class="btn r" href="/contact/?need=Freight%20quote">Get a freight quote {AR}</a></div></div></section>
 {cta_end('Move your next <em>shipment</em>', 'Tell us what you are shipping, from where and to which port. We send a freight quote with the documents you will need.')}'''
-    return page('/logistics/', 'Sea, air and road freight from China to East Africa | Saweli', 'Full and shared containers to Mogadishu, Mombasa, Dar es Salaam, Djibouti and Bosaso, air freight to the capitals and road delivery inland.', body, '/logistics/')
+    return page('/logistics/', 'Sea, air and road freight from China to East Africa | Saweli', 'Full and shared containers to Mogadishu, Mombasa, Dar es Salaam, Djibouti and Bosaso, air freight to the capitals and road delivery inland.', body, '/logistics/', lcp='ship_aerial')
 
 def corridors():
     cards = ''.join(f'<article class="port r d{i%3}" id="{k}"><div class="ph">{img(k, n, 800, "(max-width:620px) 100vw, 33vw")}</div><div class="tx"><div class="cty">{E(c)}</div><h3>{E(n)}</h3><p>{E(s)}</p></div></article>' for i, (k, n, c, s) in enumerate(MARKETS))
@@ -295,7 +300,7 @@ def corridors():
 <section class="sec"><div class="wrap"><div class="head"><div><span class="kicker r">Cities</span><h2 data-split>Markets on the corridor</h2></div><p class="lede mut r">Six markets in East Africa and the four trading regions in China we buy from most.</p></div><div class="ports">{cards}</div></div></section>
 <section class="sec sand"><div class="wrap center"><span class="kicker r">Coming next</span><h2 data-split>Somalia first, then Kenya</h2><p class="lede mut r" style="margin-top:20px">Saweli starts with trade into Somalia. Kenya and a presence in China come next. Tell us if you want us in your market sooner.</p><p class="r"><a class="btn" href="/contact/">Talk to us {AR}</a></p></div></section>
 {cta_end()}'''
-    return page('/corridors/', 'Trade corridors between China and East Africa | Saweli', 'Routes and markets: Mogadishu, Nairobi, Dar es Salaam, Addis Ababa, Kampala and Djibouti, linked to Yiwu, Guangzhou, Shenzhen, Shanghai and Ningbo.', body, '/corridors/')
+    return page('/corridors/', 'Trade corridors between China and East Africa | Saweli', 'Routes and markets: Mogadishu, Nairobi, Dar es Salaam, Addis Ababa, Kampala and Djibouti, linked to Yiwu, Guangzhou, Shenzhen, Shanghai and Ningbo.', body, '/corridors/', lcp='containers_aerial')
 
 def banks():
     body = f'''{phero('handshake', 'For banks', 'Know what you are <em>paying for</em>', 'Banks in East Africa use Saweli to check the customer, the supplier and the documents behind a trade payment before it is released.')}
@@ -305,7 +310,7 @@ def banks():
 <ul class="checks r"><li>The bank keeps the customer and the account</li><li>Saweli supplies the checks and the reports</li><li>Payment moves through the bank's own channels</li><li>Each payment is linked to an inspected shipment</li></ul><a class="btn r" href="/contact/?need=Bank%20partnership">Talk to us as a bank {AR}</a></div></div></section>
 <section class="sec"><div class="wrap faqwrap"><div><span class="kicker r">For banks</span><h2 data-split>Common questions</h2></div>{faq([('Does Saweli hold customer money?', 'No. Payments go through the partner bank. Saweli does not take deposits or hold funds.'),('Which checks do you run?', 'Customer verification, supplier registration and factory checks, inspection of the goods and a cross-check of the trade documents.'),('Can we see a sample report?', 'Yes. Ask us and we will send a sample with the customer details removed.'),('Which countries do you cover?', 'Somalia first, then Kenya. Suppliers anywhere in mainland China.')])}</div></section>
 {cta_end('Partner with <em>Saweli</em>', 'We are speaking with banks in Somalia and Kenya. Tell us about your trade finance desk and we will arrange a call.')}'''
-    return page('/banks/', 'For banks: verified trade behind each payment | Saweli', 'Customer, supplier, goods and document checks for trade payments between East Africa and China. Saweli does not hold funds.', body, '/banks/')
+    return page('/banks/', 'For banks: verified trade behind each payment | Saweli', 'Customer, supplier, goods and document checks for trade payments between East Africa and China. Saweli does not hold funds.', body, '/banks/', lcp='handshake')
 
 def about():
     body = f'''{phero('mog_coast', 'About', 'Built for the people who <em>trade</em> on this route', 'Saweli started with a simple question from traders in Mogadishu: how do I know the supplier is real, the goods are right and my money is safe? Everything we do answers one part of that.')}
@@ -314,7 +319,7 @@ def about():
 <div class="cards">{"".join(f'<div class="card r d{i%3}"><div class="ico">{ic(c)}</div><h3>{E(t)}</h3><p>{E(d)}</p></div>' for i,(c,t,d) in enumerate([('eye','Show the cost','Every fee is in the quote before you confirm. No surprises at the port.'),('shield','Check first','No money moves to a supplier we have not checked.'),('chat','Speak your language','Somali, Swahili, English and Chinese, from the first message.'),('doc','Write it down','Every step leaves a document under your order reference.'),('bank','Banks hold the money','Payments go through partner banks. We do not take deposits.'),('users','Both sides matter','Exporters in East Africa get the same care as importers.')]))}</div></div></section>
 <section class="sec"><div class="wrap feat"><div class="media clip">{img('cn_wholesale', 'Wholesale market', 1600, "(max-width:900px) 100vw, 50vw")}</div><div><span class="kicker r">Where we are going</span><h2 data-split>Somalia first, then Kenya and China</h2><p class="lede mut r">We start with trade into Somalia, where the need is greatest. Kenya and a presence in China come next, so that both ends of the route are covered by our own people.</p><a class="btn r" href="/contact/">Work with us {AR}</a></div></div></section>
 {cta_end()}'''
-    return page('/about/', 'About Saweli', 'Saweli puts a checked, documented record behind trade between East Africa and China, starting in Somalia.', body, '/about/')
+    return page('/about/', 'About Saweli', 'Saweli puts a checked, documented record behind trade between East Africa and China, starting in Somalia.', body, '/about/', lcp='mog_coast')
 
 def contact():
     roles = ['Buy from China', 'Sell to China', 'Check a supplier', 'Freight only', 'Bank partnership', 'Something else']
@@ -362,13 +367,13 @@ def build():
     for f in ('site.css', 'app.js', 'film.js'): shutil.copy(f'{SRC}/{f}', f'{D}/assets/{f}')
     os.makedirs(f'{D}/media', exist_ok=True); shutil.copy(f'{SRC}/film-audio.m4a', f'{D}/media/film-audio.m4a'); shutil.copy('/tmp/film/saweli-how-it-works.mp4', f'{D}/media/saweli-how-it-works.mp4')
     NM = '/home/claude/fontsrc/node_modules/'
-    for a, b in [('@fontsource-variable/big-shoulders-display/files/big-shoulders-display-latin-wght-normal', 'bigshoulders'), ('@fontsource-variable/inter/files/inter-latin-wght-normal', 'inter')]:
+    for a, b in [('@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal', 'jakarta'), ('@fontsource-variable/inter/files/inter-latin-wght-normal', 'inter')]:
         shutil.copy(f'{NM}{a}.woff2', f'{D}/assets/fonts/{b}.woff2')
     chars = set()
     for h in pages.values(): chars |= {c for c in h if ord(c) > 0x2e80}
     chars |= set('萨维利两个市场的交汇处下单核实验货运输付款告诉我们您需求供应商物发前先抵港口通过合作银行')
     css = ''
-    for fam, pkg, wt in [('Noto Serif SC', 'noto-serif-sc', 300), ('Noto Sans SC', 'noto-sans-sc', 500)]:
+    for fam, pkg, wt in [('Noto Sans SC', 'noto-sans-sc', 500)]:
         txt = open(f'{NM}@fontsource/{pkg}/{wt}.css').read()
         for blk in re.findall(r'@font-face \{.*?\}', txt, re.S):
             ur = re.search(r'unicode-range: ([^;]+);', blk).group(1); rng = []
@@ -392,5 +397,13 @@ def build():
     open(f'{D}/_redirects', 'w').write('/how /how-it-works/ 301\n/services/ /sourcing/ 301\n/markets/ /corridors/ 301\n/logistic/ /logistics/ 301\n')
     json.dump(USED, open(f'{D}/img.json', 'w'), indent=0)
     open(f'{D}/_worker.js', 'w').write(open(f'{SRC}/_worker.js').read().replace('__IMG__', json.dumps(USED)))
+    import subprocess, re as _re
+    for f in ('site.css', 'app.js', 'film.js'):
+        subprocess.run(['/home/claude/site3/node_modules/.bin/esbuild', f'{D}/assets/{f}', '--minify', '--allow-overwrite', f'--outfile={D}/assets/{f}', '--log-level=error'], check=True)
+    for root, _, fs in os.walk(D):
+        for fn in fs:
+            if fn.endswith('.html'):
+                fp = os.path.join(root, fn); h = open(fp).read()
+                h = _re.sub(r'>\s+<', '><', h); open(fp, 'w').write(h)
     print('pages', len(pages), 'images', len(USED))
 if __name__ == '__main__': build()

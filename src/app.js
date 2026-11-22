@@ -2,17 +2,13 @@
 const d=document,w=window,$=(s,c=d)=>c.querySelector(s),$$=(s,c=d)=>[...c.querySelectorAll(s)];
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const root=d.documentElement;
-// loader: first page of a visit only
-const ld=$('.loader');
-if(ld){let seen=false;try{seen=sessionStorage.getItem('sw-l')}catch(e){}
- if(seen||RM){ld.remove()}else{try{sessionStorage.setItem('sw-l',1)}catch(e){}
-  w.addEventListener('load',()=>setTimeout(()=>{ld.classList.add('go');setTimeout(()=>ld.remove(),1300)},900));setTimeout(()=>ld&&ld.classList.add('go'),3200)}}
+const ld=null;
 // split headings into words
 $$('[data-split]').forEach(el=>{const walk=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===3){const f=d.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(p=>{if(!p)return;if(/^\s+$/.test(p)){f.appendChild(d.createTextNode(p));return}const o=d.createElement('span');o.className='w';const i=d.createElement('span');i.textContent=p;o.appendChild(i);f.appendChild(o)});c.replaceWith(f)}else if(c.nodeType===1&&!c.classList.contains('w'))walk(c)})};walk(el);el.classList.add('split');$$('.w>span',el).forEach((s,i)=>s.style.transitionDelay=(i*0.055+(+el.dataset.split||0))+'s')});
 // reveal
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px',threshold:.08});
 $$('.r,.clip,.split,.mapbox').forEach(el=>io.observe(el));
-$$('.hero .split,.phero .split').forEach(el=>setTimeout(()=>el.classList.add('in'),ld&&ld.isConnected?1100:150));
+$$('.hero .split,.phero .split').forEach(el=>requestAnimationFrame(()=>el.classList.add('in')));
 // map path lengths
 $$('.draw').forEach(p=>{try{p.style.setProperty('--len',Math.ceil(p.getTotalLength()))}catch(e){}});
 // header
@@ -24,7 +20,7 @@ function onScroll(){const y=w.scrollY,h=hero?hero.offsetHeight-90:40;
  top.classList.toggle('hide',y>lastY&&y>600&&!root.classList.contains('menu-open'));lastY=y;
  if(prog){const m=d.documentElement.scrollHeight-innerHeight;prog.style.transform=`scaleX(${m>0?y/m:0})`}
  if(wa)wa.classList.toggle('on',y>500);
- par();journey();statement();ticking=false}
+ par();journey();statement();stepsSync();ticking=false}
 w.addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(onScroll)}},{passive:true});
 // menu
 const bg=$('.burger');if(bg)bg.addEventListener('click',()=>{const o=root.classList.toggle('menu-open');bg.setAttribute('aria-expanded',o);d.body.style.overflow=o?'hidden':''});
@@ -56,9 +52,13 @@ function statement(){if(!st)return;const r=st.getBoundingClientRect();const p=Ma
 // counters
 const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,to=+el.dataset.count,t0=performance.now();cio.unobserve(el);if(RM){el.textContent=to;return}(function f(t){const k=Math.min(1,(t-t0)/1600),v=Math.round(to*(1-Math.pow(1-k,3)));el.textContent=v;if(k<1)requestAnimationFrame(f)})(t0)}),{threshold:.5});
 $$('[data-count]').forEach(el=>cio.observe(el));
-// sticky steps
-const sx=$('.stepsx');if(sx){const items=$$('ol>li',sx),ims=$$('.stick img',sx),lbl=$('.stick .lbl',sx);
- const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const n=items.indexOf(e.target);items.forEach((x,i)=>x.classList.toggle('on',i===n));ims.forEach((x,i)=>x.classList.toggle('on',i===n));if(lbl)lbl.textContent=(n+1)+' / '+items.length}}),{rootMargin:'-45% 0px -45% 0px'});items.forEach(x=>so.observe(x))}
+// sticky steps: the step nearest the middle of the screen picks the photo
+const sx=$('.stepsx');let stepsSync=()=>{};
+if(sx){const items=$$('ol>li',sx),ims=$$('.stick img',sx),lbl=$('.stick .lbl',sx);let cur=-1;
+ ims.forEach(i=>{i.loading='eager'});
+ stepsSync=()=>{const mid=innerHeight/2;let best=0,bd=1e9;items.forEach((x,i)=>{const r=x.getBoundingClientRect();const d=Math.abs((r.top+r.bottom)/2-mid);if(d<bd){bd=d;best=i}});
+  if(best!==cur){cur=best;items.forEach((x,i)=>x.classList.toggle('on',i===best));ims.forEach((x,i)=>x.classList.toggle('on',i===best));if(lbl)lbl.textContent=(best+1)+' / '+items.length}};
+ stepsSync()}
 // tabs
 $$('.tabs').forEach(tb=>{const bs=$$('button',tb);bs.forEach(b=>b.addEventListener('click',()=>{bs.forEach(x=>{x.setAttribute('aria-selected',x===b);const p=d.getElementById(x.getAttribute('aria-controls'));if(p)p.hidden=x!==b});const p=d.getElementById(b.getAttribute('aria-controls'));$$('.r,.clip',p).forEach(e=>e.classList.add('in'))}))});
 // modes

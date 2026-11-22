@@ -4,8 +4,8 @@ const box=document.querySelector('.film');if(!box)return;
 const data=JSON.parse(document.getElementById('film-data').textContent);
 const NS='http://www.w3.org/2000/svg';
 const T='#FF5A1F',U='#2B211B',U2='#1B1410',SH='#FFF8F1',SUN='#FFC93C',G='#6E625A',LN='#E8DCD2';
-const SER="'Big Shoulders Display','Noto Sans SC',Impact,sans-serif",SAN="'Inter Variable',Inter,Arial,sans-serif",ZH="'Noto Serif SC',serif",ZHS="'Noto Sans SC',sans-serif";
-const FV=`font-weight="800" letter-spacing="-.5"`;
+const SER="'Plus Jakarta Sans','Noto Sans SC',system-ui,sans-serif",SAN="'Inter Variable',Inter,Arial,sans-serif",ZH="'Noto Serif SC',serif",ZHS="'Noto Sans SC',sans-serif";
+const FV=`font-weight="700" style="letter-spacing:-0.022em"`;
 const SC=[['intro',5],['order',7.2],['verify',8.2],['inspect',8.2],['ship',9],['pay',8.2],['end',5.6]];
 let S=0;const START=SC.map(([n,d])=>{const s=S;S+=d;return s});const TOTAL=S;
 const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
@@ -13,7 +13,7 @@ const p=(t,a,b)=>cl((t-a)/(b-a));
 const eo=x=>1-Math.pow(1-x,3),eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,back=x=>{const c=1.7;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
 const tick='M-9 0 L-3 6 L9 -7',cross='M-7 -7 L7 7 M7 -7 L-7 7';
 const txt=(x,y,s,o='')=>`<text x="${x}" y="${y}" ${o}>${s}</text>`;
-const title=(k,n,h,dark)=>`<g class="ttl"><text x="120" y="122" font-family="${SAN}" font-weight="600" font-size="21" letter-spacing="1" fill="${dark?SUN:T}">STEP ${n}<tspan font-family="${ZHS}" font-weight="500" dx="14">${data.zhStep[n-1]}</tspan></text><text x="116" y="200" font-family="${SER}" ${FV} font-size="84" fill="${dark?'#fff':U}">${h}</text><text x="120" y="248" font-family="${ZH}" font-weight="300" font-size="28" letter-spacing="3" fill="${dark?'rgba(255,255,255,.6)':G}">${data.zhTitle[n-1]}</text></g>`;
+const title=(k,n,h,dark)=>`<g class="ttl"><text x="120" y="122" font-family="${SAN}" font-weight="600" font-size="21" letter-spacing="1" fill="${dark?SUN:T}">STEP ${n}<tspan font-family="${ZHS}" font-weight="500" dx="14">${data.zhStep[n-1]}</tspan></text><text x="116" y="200" font-family="${SER}" ${FV} font-size="62" fill="${dark?'#fff':U}">${h}</text><text x="120" y="248" font-family="${ZHS}" font-weight="400" font-size="28" letter-spacing="3" fill="${dark?'rgba(255,255,255,.6)':G}">${data.zhTitle[n-1]}</text></g>`;
 const BG=(k,dark=.74)=>`<g class="bgp" data-k="${k}"><image class="bgi" href="${data.imgBase}${k}${data.imgExt}" x="-80" y="-45" width="1760" height="990" preserveAspectRatio="xMidYMid slice"/><rect width="1600" height="900" fill="${U2}" opacity="${dark}"/><rect width="1600" height="900" fill="url(#vig)"/><rect width="1600" height="900" fill="url(#gr)" opacity=".7"/></g>`;
 const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 1600 900');svg.setAttribute('role','img');svg.setAttribute('aria-label',data.label);
 const L=data.land,sea=data.sea,seaS=data.seaS,cy=data.cities;
@@ -23,8 +23,8 @@ svg.innerHTML=`<defs><filter id="sh" x="-20%" y="-20%" width="140%" height="160%
 <g id="s0">${BG(data.bg[0],.78)}<g class="lanes">${[0,1,2,3].map(i=>`<path class="ln" d="M-100 ${640+i*34} C 400 ${560+i*30}, 900 ${720+i*20}, 1700 ${600+i*36}" fill="none" stroke="url(#lane)" stroke-width="${2.5-i*.4}" stroke-dasharray="14 18"/>`).join("")}</g>
  <clipPath id="mkc"><rect id="mkr" x="560" y="170" width="0" height="250"/></clipPath>
  <g id="mk"><image href="/brand/saweli-mark.svg" x="560" y="170" width="480" height="249" clip-path="url(#mkc)"/></g>
- <text id="i0" x="800" y="540" text-anchor="middle" font-family="${ZH}" font-weight="300" font-size="30" letter-spacing="14" fill="${SUN}">两个市场的交汇处</text>
- <text id="i1" x="800" y="660" text-anchor="middle" font-family="${SER}" ${FV} font-size="128" fill="#fff">How <tspan fill="${T}">Saweli</tspan> works</text>
+ <text id="i0" x="800" y="540" text-anchor="middle" font-family="${ZHS}" font-weight="400" font-size="30" letter-spacing="14" fill="${SUN}">两个市场的交汇处</text>
+ <text id="i1" x="800" y="660" text-anchor="middle" font-family="${SER}" ${FV} font-size="96" fill="#fff">How <tspan fill="${T}">Saweli</tspan> works</text>
  <text id="i2" x="800" y="712" text-anchor="middle" font-family="${SAN}" font-weight="400" font-size="26" fill="rgba(255,255,255,.78)">From a factory in China to your shop in East Africa</text></g>
 <g id="s1">${BG(data.bg[1])}
  <g id="ph" filter="url(#sh)"><rect x="200" y="110" width="440" height="720" rx="52" fill="#fff"/><rect x="200" y="110" width="440" height="720" rx="52" fill="none" stroke="${LN}" stroke-width="2"/>
@@ -33,7 +33,7 @@ svg.innerHTML=`<defs><filter id="sh" x="-20%" y="-20%" width="140%" height="160%
   ${[0,1,2].map(i=>`<g transform="translate(244 ${262+i*120})"><text font-family="${SAN}" font-size="17" fill="${G}">${data.fields[i][0]}</text><rect y="16" width="352" height="62" rx="14" fill="${SH}"/><rect id="fb${i}" y="16" width="352" height="62" rx="14" fill="none" stroke="${T}" stroke-width="2.5" opacity="0"/><text id="fv${i}" x="18" y="56" font-family="${SAN}" font-size="23" fill="${U}"></text></g>`).join('')}
   <rect id="qb" x="244" y="650" width="352" height="70" rx="35" fill="${U}"/>${txt(420,694,'Get a quote',`text-anchor="middle" font-family="${SAN}" font-weight="600" font-size="22" fill="#fff"`)}
   <circle id="tap" cx="420" cy="685" r="0" fill="${T}" opacity=".35"/></g>
-  <g>${txt(760,286,`STEP 1<tspan font-family="${ZHS}" font-weight="500" dx="14">${data.zhStep[0]}</tspan>`,`font-family="${SAN}" font-weight="600" font-size="21" letter-spacing="1" fill="${SUN}"`)}${txt(756,372,'Tell us what you need',`font-family="${SER}" ${FV} font-size="84" fill="#fff"`)}${txt(760,420,data.zhTitle[0],`font-family="${ZH}" font-weight="300" font-size="28" letter-spacing="3" fill="rgba(255,255,255,.62)"`)}${txt(760,462,'Send the order, or a supplier you already use.',`font-family="${SAN}" font-size="24" fill="rgba(255,255,255,.78)"`)}</g>
+  <g>${txt(760,286,`STEP 1<tspan font-family="${ZHS}" font-weight="500" dx="14">${data.zhStep[0]}</tspan>`,`font-family="${SAN}" font-weight="600" font-size="21" letter-spacing="1" fill="${SUN}"`)}${txt(756,372,'Tell us what you need',`font-family="${SER}" ${FV} font-size="62" fill="#fff"`)}${txt(760,420,data.zhTitle[0],`font-family="${ZHS}" font-weight="400" font-size="28" letter-spacing="3" fill="rgba(255,255,255,.62)"`)}${txt(760,462,'Send the order, or a supplier you already use.',`font-family="${SAN}" font-size="24" fill="rgba(255,255,255,.78)"`)}</g>
  <g id="qc" filter="url(#sh)"><rect x="760" y="480" width="640" height="300" rx="28" fill="#fff"/>
   ${txt(800,538,'Your quote',`font-family="${SER}" ${FV} font-size="32" fill="${U}"`)}${txt(1360,538,'Full cost shown first',`text-anchor="end" font-family="${SAN}" font-weight="600" font-size="18" fill="${T}"`)}
   ${data.cost.map((c,i)=>`<g transform="translate(800 ${580+i*46})">${txt(0,20,c,`font-family="${SAN}" font-size="19" fill="${G}"`)}<rect x="170" y="4" width="390" height="18" rx="9" fill="${SH}"/><rect class="cb" x="170" y="4" width="0" height="18" rx="9" fill="${[T,'#FF8A3D',SUN,U][i]}" data-w="${[300,120,220,70][i]}"/></g>`).join('')}</g></g>
@@ -69,14 +69,14 @@ svg.innerHTML=`<defs><filter id="sh" x="-20%" y="-20%" width="140%" height="160%
   `<path d="M-40 -6 L0 -36 L40 -6 Z" fill="${SUN}"/><rect x="-34" y="0" width="68" height="8" fill="${SUN}"/><rect x="-28" y="12" width="10" height="26" fill="${SUN}"/><rect x="-5" y="12" width="10" height="26" fill="${SUN}"/><rect x="18" y="12" width="10" height="26" fill="${SUN}"/><rect x="-38" y="40" width="76" height="8" fill="${SUN}"/>`,
   `<rect x="-38" y="-6" width="76" height="46" fill="${T}"/><path d="M-38 -6 V-30 l24 14 v-14 l24 14 v-14 l28 14 V-6z" fill="#FF8A3D"/>`][i]}
   <g class="ok" transform="translate(60 -60)" opacity="0"><circle r="22" fill="#16A34A"/><path d="${tick}" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
-  ${txt(0,146,n,`text-anchor="middle" font-family="${SER}" ${FV} font-size="40" fill="#fff"`)}${txt(0,178,s,`text-anchor="middle" font-family="${SAN}" font-size="19" fill="rgba(255,255,255,.7)"`)}</g>`).join('')}
+  ${txt(0,146,n,`text-anchor="middle" font-family="${SER}" ${FV} font-size="30" fill="#fff"`)}${txt(0,178,s,`text-anchor="middle" font-family="${SAN}" font-size="19" fill="rgba(255,255,255,.7)"`)}</g>`).join('')}
  <g id="pk"><rect x="-34" y="-42" width="68" height="84" rx="8" fill="#fff" stroke="${U}" stroke-width="3"/><rect x="-20" y="-24" width="40" height="5" fill="${LN}"/><rect x="-20" y="-10" width="40" height="5" fill="${LN}"/><rect x="-20" y="4" width="26" height="5" fill="${LN}"/><circle cx="16" cy="26" r="10" fill="${T}"/></g>
  <g id="coin"><circle r="30" fill="${SUN}" stroke="#E0A800" stroke-width="4"/><path d="M-10 -12 h14 a8 8 0 0 1 0 16 h-8 a8 8 0 0 0 0 16 h14 M0 -18 v36" fill="none" stroke="${U}" stroke-width="4" stroke-linecap="round"/></g></g>
 <g id="s6">${BG(data.bg[6],.8)}
  <g id="mk2"><image href="/brand/saweli-stacked-rev.svg" x="-150" y="-133" width="300" height="266"/></g>
- <text id="e1" x="800" y="610" text-anchor="middle" font-family="${SER}" ${FV} font-size="110" fill="#fff">Start your <tspan fill="${T}">order</tspan></text>
+ <text id="e1" x="800" y="610" text-anchor="middle" font-family="${SER}" ${FV} font-size="88" fill="#fff">Start your <tspan fill="${T}">order</tspan></text>
  <text id="e2" x="800" y="668" text-anchor="middle" font-family="${SAN}" font-size="28" fill="rgba(255,255,255,.75)">saweli.com  ·  ${data.phone}</text>
- <text id="e3" x="800" y="740" text-anchor="middle" font-family="${ZH}" font-weight="300" font-size="28" letter-spacing="12" fill="${SUN}">两个市场的交汇处</text></g>`;
+ <text id="e3" x="800" y="740" text-anchor="middle" font-family="${ZHS}" font-weight="400" font-size="28" letter-spacing="12" fill="${SUN}">两个市场的交汇处</text></g>`;
 box.prepend(svg);
 const q=s=>svg.querySelector(s),qa=s=>[...svg.querySelectorAll(s)];
 const g=SC.map((_,i)=>q('#s'+i));
@@ -142,14 +142,27 @@ const ui=()=>{if(pp){pp.innerHTML=playing?ICON.pause:(t>=TOTAL?ICON.again:ICON.p
  cb.forEach((b,i)=>{const s=START[i+1],e=s+SC[i+1][1]+(i===4?SC[6][1]:0);const f=cl((t-s)/(e-s));b.querySelector('b').style.transform=`scaleX(${f})`;b.classList.toggle('on',t>=s&&t<e)})};
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 if(scrollMode){
- const sec=box.closest('.scrollfilm');let idle;
- const fromScroll=()=>{const r=sec.getBoundingClientRect(),max=sec.offsetHeight-innerHeight;const pr=cl(-r.top/max);const nt=pr*TOTAL;
-  if(sound){if(Math.abs(au.currentTime-nt)>.35)au.currentTime=nt;if(au.paused&&nt<TOTAL-.1)au.play().catch(()=>{});clearTimeout(idle);idle=setTimeout(()=>au.pause(),280)}
-  t=nt;render(t);ui();sec.style.setProperty('--fp',pr)};
- addEventListener('scroll',()=>requestAnimationFrame(fromScroll),{passive:true});
- cb.forEach((b,i)=>b.addEventListener('click',()=>{const max=sec.offsetHeight-innerHeight;scrollTo({top:sec.offsetTop+max*(START[i+1]+.2)/TOTAL,behavior:'smooth'})}));
- if(snd)snd.addEventListener('click',()=>{sound=!sound;snd.setAttribute('aria-pressed',sound);snd.classList.toggle('on',sound);if(sound){au.preload='auto';au.currentTime=t;au.play().then(()=>{clearTimeout(idle);idle=setTimeout(()=>au.pause(),900)}).catch(()=>{})}else au.pause()});
- render(0);ui();fromScroll();
+ const sec=box.closest('.scrollfilm'),stage=sec.querySelector('.stage'),tap=sec.querySelector('.tapsound');let inView=false,started=false;
+ const setSound=on=>{sound=on;if(snd){snd.setAttribute('aria-pressed',on);snd.classList.toggle('on',on)}if(tap)tap.hidden=on||!playing;if(on){au.preload='auto';au.currentTime=t;if(playing)au.play().catch(()=>{setSound(false)})}else au.pause()};
+ const start=()=>{if(t>=TOTAL)t=0;playing=true;last=performance.now();started=true;
+  if(navigator.userActivation&&navigator.userActivation.hasBeenActive&&!sound){sound=true;au.preload='auto';au.currentTime=t;au.play().then(()=>setSound(true)).catch(()=>setSound(false))}else if(sound){au.currentTime=t;au.play().catch(()=>setSound(false))}
+  if(tap)tap.hidden=sound;requestAnimationFrame(loop);ui()};
+ const stop=()=>{playing=false;au.pause();if(tap)tap.hidden=true;ui()};
+ function loop(now){if(!playing)return;if(sound&&!au.paused&&au.currentTime>0)t=au.currentTime;else t+=(now-last)/1000;last=now;if(t>=TOTAL){t=TOTAL;stop();sec.classList.add('ended')}render(t);ui();if(playing)requestAnimationFrame(loop)}
+ const fit=()=>svg.setAttribute('preserveAspectRatio',innerWidth/innerHeight>=1.45?'xMidYMid slice':'xMidYMid meet');fit();addEventListener('resize',fit);
+ const frame=()=>{const r=sec.getBoundingClientRect(),vh=innerHeight,span=sec.offsetHeight-vh;
+  const enter=cl((vh-r.top)/vh),p=cl(-r.top/span),out=cl((p-.82)/.18);
+  const sc=.72+.28*eo(enter)-.1*out,rad=26*(1-eo(enter))+20*out,op=Math.min(.35+.65*eo(enter),1-.9*out);
+  stage.style.transform=`scale(${sc})`;stage.style.borderRadius=rad+'px';stage.style.opacity=op;
+  const vis=enter>.92&&out<.55;
+  if(vis&&!inView){inView=true;if(!sec.classList.contains('ended'))start()}else if(!vis&&inView){inView=false;stop()}};
+ addEventListener('scroll',()=>requestAnimationFrame(frame),{passive:true});addEventListener('resize',frame);
+ cb.forEach((b,i)=>b.addEventListener('click',()=>{t=START[i+1]+.01;sec.classList.remove('ended');if(sound)au.currentTime=t;render(t);if(!playing)start();ui()}));
+ if(snd)snd.addEventListener('click',()=>setSound(!sound));
+ if(tap)tap.addEventListener('click',()=>setSound(true));
+ if(pp)pp.addEventListener('click',()=>{if(playing)stop();else{sec.classList.remove('ended');start()}});
+ svg.addEventListener('click',()=>{if(playing)stop();else{sec.classList.remove('ended');start()}});
+ render(START[1]+5.6);ui();frame();
  return;
 }
 const syncA=()=>{if(!sound)return;if(Math.abs(au.currentTime-t)>.25)au.currentTime=t;if(playing&&au.paused)au.play().catch(()=>{});if(!playing&&!au.paused)au.pause()};
