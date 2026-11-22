@@ -98,10 +98,10 @@ def page(path, title, desc, body, cur='', light=False, og='/og.jpg', extra_js=''
 <meta property="og:type" content="website"><meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}{og}"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#1B1410"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" hreflang="en" href="{SITE}/"><link rel="alternate" hreflang="zh" href="{SITE}/zh/"><link rel="alternate" hreflang="so" href="{SITE}/so/"><link rel="alternate" hreflang="sw" href="{SITE}/sw/">
-<link rel="preload" href="/assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=5"><script type="application/ld+json">{json.dumps(ld)}</script></head>
+<link rel="preload" href="/assets/fonts/bigshoulders.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css?v=6"><script type="application/ld+json">{json.dumps(ld)}</script></head>
 <body><a class="skip" href="#main">Skip to content</a>{LOADER}{header(cur, light)}<main id="main">{zhk(body)}</main>{footer()}
-<script src="/assets/app.js?v=5" defer></script>{extra_js}</body></html>'''
+<script src="/assets/app.js?v=6" defer></script>{extra_js}</body></html>'''
 
 def phero(k, crumb, h, lede, meta=None, extra=''):
     zh = ZHP.get(crumb, '')
@@ -175,7 +175,8 @@ def rail(id='mk', link=True):
 def railnav(id):
     return f'<div class="railnav" data-rail="{id}"><button type="button" data-dir="-1" aria-label="Previous"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button type="button" data-dir="1" aria-label="Next"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>'
 
-def film_block():
+def film_block(mode='play'):
+    for k in ['containers_aerial', 'cn_market', 'cn_factorywoman', 'cn_inspector', 'ship_aerial', 'mog_port', 'hero_port']: src(k, 1600)
     data = {'label': 'How Saweli works, in five steps', 'land': M['land'], 'sea': M['sea'], 'seaS': M['seaS'], 'cities': M['cities'],
             'pins': [['Ningbo', 26, 'start'], ['Shanghai', -26, 'end'], ['Guangzhou', -26, 'end'], ['Djibouti', -26, 'end'], ['Mogadishu', 26, 'start'], ['Mombasa', 26, 'start']],
             'fields': [['Product', 'Solar panels, 450 W'], ['Quantity', '1,200 panels'], ['Deliver to', 'Port of Mogadishu']],
@@ -184,10 +185,14 @@ def film_block():
             'docs': ['Bill of lading', 'Commercial invoice', 'Packing list', 'Inspection report'], 'payline': 'The invoice and inspection report travel with the payment.',
             'nodes': [['You', 'The buyer'], ['Partner bank', 'Checks the documents'], ['Supplier', 'Paid on the record']],
             'chap': ['Order', 'Verify', 'Inspect', 'Ship', 'Pay'], 'phone': PHONE,
-            'zhStep': ['下单', '核实', '验货', '运输', '付款'], 'zhTitle': ['告诉我们您的需求', '我们核实供应商', '货物发运前先验货', '运抵您的港口', '通过合作银行付款']}
+            'zhStep': ['下单', '核实', '验货', '运输', '付款'], 'imgBase': '/img/', 'imgExt': '-1600.jpg', 'audio': '/media/film-audio.m4a',
+            'bg': ['containers_aerial', 'cn_market', 'cn_factorywoman', 'cn_inspector', 'ship_aerial', 'mog_port', 'hero_port'], 'zhTitle': ['告诉我们您的需求', '我们核实供应商', '货物发运前先验货', '运抵您的港口', '通过合作银行付款']}
+    if mode == 'scroll':
+        return (f'<section class="scrollfilm" aria-label="How Saweli works, film"><div class="sticky"><div class="film" data-mode="scroll"><div class="ui"><div class="chap"></div><button class="snd" type="button" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w1" d="M16.5 8.5a5 5 0 0 1 0 7"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg><span>Sound on</span></button></div>'
+                f'<div class="hint"><span>Scroll to play</span><i></i></div></div></div></section><script type="application/json" id="film-data">{json.dumps(data)}</script>')
     return (f'<div class="film r"><div class="ui"><button class="pp" type="button" aria-label="Play"></button><div class="chap"></div><button class="snd" type="button" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w1" d="M16.5 8.5a5 5 0 0 1 0 7"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg><span>Sound</span></button></div></div>'
             f'<script type="application/json" id="film-data">{json.dumps(data)}</script>')
-FILMJS = '<script src="/assets/film.js?v=5" defer></script>'
+FILMJS = '<script src="/assets/film.js?v=6" defer></script>'
 
 # ------------------------------------------------------------------ pages
 def home():
@@ -214,7 +219,7 @@ def home():
 <div class="stats"><div class="r"><b data-count="5">0</b><span>Ports we ship to in East Africa</span></div><div class="r d1"><b data-count="4">0</b><span>Languages we work in</span></div><div class="r d2"><b data-count="6">0</b><span>Checks before your goods move</span></div><div class="r d3"><b data-count="1">0</b><span>Reference number for the whole order</span></div></div></div></section>
 <section class="sec tight" style="padding-top:0"><div class="wrap"><div class="head"><div><span class="kicker r">What we do</span><h2 data-split>Four services, one order</h2></div><p class="lede mut r">Use one of them or all four. Each order carries one reference, and you can follow it from the first message to the bank receipt.</p></div><div class="svc">{sv}</div></div></section>
 <section class="journey" style="--n:{len(STEPS)}"><div class="pin"><div class="wrap"><div class="jhead"><div><span class="kicker lt">The journey</span><h2>From a factory in China<br>to your shop</h2></div><div class="jprog"><i></i></div></div></div><div class="track">{jc}</div></div></section>
-<section class="sec"><div class="wrap film-cta"><div><span class="kicker r">Watch</span><h2 data-split>How Saweli works, in one minute</h2><p class="lede mut r">Order, verify, inspect, ship and pay. Click any chapter to jump to it.</p><a class="link r" href="/how-it-works/">Read the full process {AR}</a></div>{film_block()}</div></section>
+<section class="sec tight" style="padding-bottom:40px"><div class="wrap"><div class="head" style="margin-bottom:0"><div><span class="kicker r">Watch</span><h2 data-split>How Saweli works, in one scroll</h2></div><p class="lede mut r">Keep scrolling and the film plays. Turn the sound on to hear it explained.</p></div></div></section>{film_block('scroll')}
 <section class="sec dark"><div class="wrap"><div class="head"><div><span class="kicker r">The corridor</span><h2 data-split>Routes we run</h2></div><p class="lede mut r">From the factories and wholesale markets of China to the ports and cities of East Africa. Sea freight for volume, air for speed and road delivery inland.</p></div>{mapsvg()}<p style="margin-top:34px"><a class="btn ghost" href="/corridors/">Explore the corridors {AR}</a></p></div></section>
 <section class="sec"><div class="wrap"><div class="head"><div><span class="kicker r">What moves</span><h2 data-split>Goods in both directions</h2></div><p class="lede mut r">What East Africa buys from China, and what China buys from East Africa.</p></div>
 <div class="tabs r" role="tablist"><button role="tab" aria-selected="true" aria-controls="p-cn">From China</button><button role="tab" aria-selected="false" aria-controls="p-ea">From East Africa</button></div>{bento(CN, 'p-cn')}{bento(EA, 'p-ea', True)}
@@ -236,7 +241,7 @@ def how():
     li = ''.join(f'<li id="{["order","sourcing","verification","inspection","shipping","payment"][i]}"><div class="num">Step 0{i+1}</div><h3>{E(t)}</h3><p class="lede mut">{E(d)}</p><ul>' + ''.join(f'<li>{E(x)}</li>' for x in det[i]) + '</ul></li>' for i, (k, t, d) in enumerate(STEPS))
     ims = ''.join(img(k, t, 1600, "50vw", cls="on" if i == 0 else "") for i, (k, t, _) in enumerate(STEPS))
     body = f'''{phero('cn_inspector', 'How it works', 'One order, checked at <em>every step</em>', 'Every order carries one reference number. You, the supplier and the bank see the same record from the first message to the payment.', [('6', 'steps, one reference'), ('4', 'languages'), ('1', 'quote with every cost')])}
-<section class="sec"><div class="wrap"><div class="head"><div><span class="kicker r">The film</span><h2 data-split>Watch the whole process</h2></div><p class="lede mut r">Five chapters: order, verify, inspect, ship and pay. Click a chapter to jump to it.</p></div>{film_block()}<p style="margin-top:24px"><a class="link" href="/media/saweli-how-it-works.mp4" download>Download the film as a video {AR}</a></p></div></section>
+<section class="sec tight" style="padding-bottom:40px"><div class="wrap"><div class="head" style="margin-bottom:0"><div><span class="kicker r">The film</span><h2 data-split>Scroll through the whole process</h2></div><p class="lede mut r">Five chapters: order, verify, inspect, ship and pay. Turn the sound on to hear it explained. <a class="link" href="/media/saweli-how-it-works.mp4" download>Download the film {AR}</a></p></div></div></section>{film_block('scroll')}
 <section class="sec white"><div class="wrap"><div class="head"><div><span class="kicker r">Step by step</span><h2 data-split>What happens to your order</h2></div><p class="lede mut r">Scroll through the six steps. The checks are the same whether you buy from China or sell to it.</p></div>
 <div class="stepsx"><ol>{li}</ol><div><div class="stick"><span class="lbl">1 / 6</span>{ims}</div></div></div></div></section>
 <section class="sec dark"><div class="wrap"><div class="head"><div><span class="kicker r">What you get</span><h2 data-split>Proof at every stage</h2></div><p class="lede mut r">Each step leaves a document behind. All of them sit under your order reference.</p></div>
@@ -357,7 +362,7 @@ def build():
     for f in ('site.css', 'app.js', 'film.js'): shutil.copy(f'{SRC}/{f}', f'{D}/assets/{f}')
     os.makedirs(f'{D}/media', exist_ok=True); shutil.copy(f'{SRC}/film-audio.m4a', f'{D}/media/film-audio.m4a'); shutil.copy('/tmp/film/saweli-how-it-works.mp4', f'{D}/media/saweli-how-it-works.mp4')
     NM = '/home/claude/fontsrc/node_modules/'
-    for a, b in [('@fontsource-variable/fraunces/files/fraunces-latin-full-normal', 'fraunces'), ('@fontsource-variable/fraunces/files/fraunces-latin-full-italic', 'fraunces-italic'), ('@fontsource-variable/inter/files/inter-latin-wght-normal', 'inter')]:
+    for a, b in [('@fontsource-variable/big-shoulders-display/files/big-shoulders-display-latin-wght-normal', 'bigshoulders'), ('@fontsource-variable/inter/files/inter-latin-wght-normal', 'inter')]:
         shutil.copy(f'{NM}{a}.woff2', f'{D}/assets/fonts/{b}.woff2')
     chars = set()
     for h in pages.values(): chars |= {c for c in h if ord(c) > 0x2e80}
@@ -385,5 +390,6 @@ def build():
     open(f'{D}/_headers', 'w').write('/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: SAMEORIGIN\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n/img/*\n  Cache-Control: public, max-age=31536000, immutable\n')
     open(f'{D}/_redirects', 'w').write('/how /how-it-works/ 301\n/services/ /sourcing/ 301\n/markets/ /corridors/ 301\n/logistic/ /logistics/ 301\n')
     json.dump(USED, open(f'{D}/img.json', 'w'), indent=0)
+    open(f'{D}/_worker.js', 'w').write(open(f'{SRC}/_worker.js').read().replace('__IMG__', json.dumps(USED)))
     print('pages', len(pages), 'images', len(USED))
 if __name__ == '__main__': build()

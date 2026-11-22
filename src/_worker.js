@@ -1,8 +1,19 @@
 const J=(b,s=200)=>new Response(JSON.stringify(b),{status:s,headers:{'content-type':'application/json'}});
 const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const IMG=__IMG__;
+async function img(req,env,ctx,path){
+ const m=path.match(/^\/img\/([a-z0-9_]+)-(800|1600)\.jpg$/);if(!m||!IMG[m[1]])return null;
+ const a=await env.ASSETS.fetch(req);if(a.ok)return a;
+ const cache=caches.default;const key=new Request(new URL(path,'https://saweli.com').toString());let r=await cache.match(key);if(r)return r;
+ const up=await fetch(`https://images.unsplash.com/${IMG[m[1]]}?auto=format&fm=jpg&fit=crop&w=${m[2]}&q=${m[2]==='800'?72:70}`,{cf:{cacheEverything:true,cacheTtl:31536000}});
+ if(!up.ok)return new Response('not found',{status:404});
+ r=new Response(up.body,{headers:{'content-type':'image/jpeg','cache-control':'public, max-age=31536000, immutable','access-control-allow-origin':'*'}});
+ ctx.waitUntil(cache.put(key,r.clone()));return r;
+}
 export default {
- async fetch(req,env){
+ async fetch(req,env,ctx){
   const url=new URL(req.url);
+  if(url.pathname.startsWith('/img/')){const r=await img(req,env,ctx,url.pathname);if(r)return r}
   if(url.hostname==='www.saweli.com'){url.hostname='saweli.com';return Response.redirect(url.toString(),301);}
   if(url.pathname==='/api/enquiry'||url.pathname==='/api/subscribe'){
    if(req.method!=='POST')return J({error:'method'},405);

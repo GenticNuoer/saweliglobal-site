@@ -15,13 +15,8 @@ window.__sawDeploy = async function (BASE, log = console.log) {
     files[p] = [b64(buf), TYPES[p.split('.').pop()] || 'application/octet-stream'];
   });
   log('site files ' + Object.keys(files).length);
-  const imgs = await (await fetch(BASE + 'site/img.json', { cache: 'no-store' })).json();
-  const jobs = []; for (const [k, id] of Object.entries(imgs)) for (const w of [800, 1600]) jobs.push([k, id, w]);
-  await pool(jobs, 6, async ([k, id, w]) => {
-    const r = await fetch(`https://images.unsplash.com/${id}?auto=format&fm=jpg&fit=crop&w=${w}&q=${w > 800 ? 70 : 72}`);
-    if (!r.ok) throw new Error('image ' + k); files[`/img/${k}-${w}.jpg`] = [b64(await r.arrayBuffer()), 'image/jpeg'];
-  });
-  log('images ' + jobs.length);
+  // photos: use copies committed under site/img when present; otherwise the worker serves them from Unsplash through the Cloudflare cache
+  log('images from repo ' + Object.keys(files).filter(p => p.startsWith('/img/')).length);
   if (window.__BIN) for (const [p, [v, t]] of Object.entries(window.__BIN)) if (!files[p]) files[p] = [v, t];
   const mf = {}, items = [];
   for (const [p, [v, t]] of Object.entries(files)) { const h = await hash(v, p.split('.').pop()); mf[p] = h; items.push({ key: h, value: v, metadata: { contentType: t }, base64: true }); }
