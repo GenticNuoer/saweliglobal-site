@@ -293,10 +293,11 @@ em.hl{font-style:normal;color:var(--t)}
 .stepsx ol{list-style:none;margin:0;padding:0}
 .stepsx li{min-height:72vh;display:flex;flex-direction:column;justify-content:center;border-top:1px solid var(--ln);opacity:.35;transition:opacity .6s}
 .stepsx li.on{opacity:1}
+.stepsx .mimg{display:none}
 .stepsx li .num{font:400 18px var(--serif);color:var(--t);margin-bottom:16px}
 .stepsx li h3{font-size:clamp(30px,3.2vw,46px);margin-bottom:16px}
 .stepsx li ul{margin:16px 0 0;padding-left:20px;color:var(--g)}.stepsx li ul li{min-height:0;display:list-item;border:0;opacity:1;margin-bottom:6px}
-@media (max-width:900px){.stepsx{grid-template-columns:1fr}.stepsx .stick{display:none}.stepsx li{min-height:0;padding:40px 0;opacity:1}}
+@media (max-width:900px){.stepsx .mimg{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:18px;margin-bottom:22px}.stepsx{grid-template-columns:1fr}.stepsx .stick{display:none}.stepsx li{min-height:0;padding:40px 0;opacity:1}}
 /* cards grid */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .card{background:#fff;border-radius:var(--r);padding:34px;display:flex;flex-direction:column;gap:12px;border:1px solid var(--ln);transition:transform .5s var(--e),box-shadow .5s var(--e),border-color .3s}
