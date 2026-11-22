@@ -384,6 +384,7 @@ def build():
     for a, b in [('horizontal/full/saweli-horizontal-full', 'saweli-colour'), ('horizontal/rev/saweli-horizontal-rev', 'saweli-white'), ('mark/full/saweli-mark-full', 'saweli-mark'), ('stacked/white/saweli-stacked-white', 'saweli-stacked-white'), ('stacked/rev/saweli-stacked-rev', 'saweli-stacked-rev')]:
         shutil.copy(f'{LP}{a}.svg', f'{D}/brand/{b}.svg')
     shutil.copy('/home/claude/site2/dist/favicon.svg', f'{D}/favicon.svg')
+    shutil.copy(f'{SRC}/og.jpg', f'{D}/og.jpg'); shutil.copy(f'{SRC}/apple-touch-icon.png', f'{D}/apple-touch-icon.png')
     urls = ['/', '/how-it-works/', '/sourcing/', '/logistics/', '/corridors/', '/banks/', '/about/', '/contact/', '/privacy/', '/zh/', '/so/', '/sw/']
     open(f'{D}/sitemap.xml', 'w').write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{SITE}{u}</loc></url>' for u in urls) + '</urlset>')
     open(f'{D}/robots.txt', 'w').write(f'User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: {SITE}/sitemap.xml\n')
