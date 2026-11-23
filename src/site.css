@@ -10,6 +10,7 @@
 :root{--t:#FF5A1F;--ti:#C2410C;--sun:#FFC93C;--ps:#FFE07A;--u:#2B211B;--u2:#1B1410;--u3:#3a2d24;--sh:#FFF8F1;--sh2:#F6ECE1;--g:#6E625A;--ln:#E8DCD2;
 --serif:'Plus Jakarta Sans','Noto Sans SC',system-ui,sans-serif;--sans:'Inter','Noto Sans SC',Arial,sans-serif;--zh:'Noto Serif SC',serif;--zhs:'Noto Sans SC',sans-serif;--w:1320px;--gut:clamp(20px,4.5vw,64px);--e:cubic-bezier(.2,.7,.1,1);--e2:cubic-bezier(.7,0,.3,1);--r:22px}
 *{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:90px}
 body{margin:0;background:var(--sh);color:var(--u);font:400 17px/1.62 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased}
 img,video,svg{display:block;max-width:100%}
@@ -241,7 +242,7 @@ em.hl{font-style:normal;color:var(--t)}
 .tabs{display:inline-flex;gap:6px;padding:6px;background:#fff;border-radius:60px;margin-bottom:36px;box-shadow:0 1px 0 var(--ln)}
 .tabs button{border:0;background:none;padding:12px 22px;border-radius:40px;font:600 15px var(--sans);cursor:pointer;transition:background .3s,color .3s}
 .tabs button[aria-selected=true]{background:var(--u);color:#fff}
-.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(220px,22vw,300px);gap:14px}
+.bento{animation:panelin .6s var(--e) both;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(220px,22vw,300px);gap:14px}
 .bento article{position:relative;border-radius:var(--r);overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;isolation:isolate}
 .bento article:first-child{grid-column:span 2;grid-row:span 2}
 .bento article[style]{grid-column:span var(--sp)}
@@ -459,3 +460,5 @@ footer.foot{background:var(--u2);color:rgba(255,255,255,.72);padding:0 0 34px;fo
 .duo .stats svg{width:28px;height:28px;color:var(--t);margin-bottom:18px}
 .duo .stats b{color:#fff}.duo .stats span{color:rgba(255,255,255,.66)}
 @media (max-width:900px){.duo-grid{grid-template-columns:1fr;height:auto;min-height:0}.duo-side{height:62vh;min-height:420px}.duo-side.ea figcaption{text-align:left}.duo-side.ea ul{justify-content:flex-start}.duo-lanes{display:none}}
+
+@keyframes panelin{from{opacity:0;transform:translateY(16px)}}
