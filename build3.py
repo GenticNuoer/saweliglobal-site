@@ -101,9 +101,9 @@ def page(path, title, desc, body, cur='', light=False, og='/og.jpg', extra_js=''
 <meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#1B1410">{preload}<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" hreflang="en" href="{SITE}/"><link rel="alternate" hreflang="zh" href="{SITE}/zh/"><link rel="alternate" hreflang="so" href="{SITE}/so/"><link rel="alternate" hreflang="sw" href="{SITE}/sw/">
 <link rel="preload" href="/assets/fonts/jakarta.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=7"><script type="application/ld+json">{json.dumps(ld)}</script>{f'<script type="application/ld+json">{crumbs}</script>' if crumbs else ''}<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:site_name" content="Saweli"></head>
+<link rel="stylesheet" href="/assets/site.css?v=8"><script type="application/ld+json">{json.dumps(ld)}</script>{f'<script type="application/ld+json">{crumbs}</script>' if crumbs else ''}<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:site_name" content="Saweli"></head>
 <body><a class="skip" href="#main">Skip to content</a>{header(cur, light)}<main id="main">{zhk(body)}</main>{footer()}
-<script src="/assets/app.js?v=7" defer></script>{extra_js}</body></html>'''
+<script src="/assets/app.js?v=8" defer></script>{extra_js}</body></html>'''
 
 def phero(k, crumb, h, lede, meta=None, extra=''):
     zh = ZHP.get(crumb, '')
@@ -196,7 +196,7 @@ def film_block(mode='play'):
                 f'<script type="application/json" id="film-data">{json.dumps(data)}</script>')
     return (f'<div class="film r"><div class="ui"><button class="pp" type="button" aria-label="Play"></button><div class="chap"></div><button class="snd" type="button" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w1" d="M16.5 8.5a5 5 0 0 1 0 7"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg><span>Sound</span></button></div></div>'
             f'<script type="application/json" id="film-data">{json.dumps(data)}</script>')
-FILMJS = '<script src="/assets/film.js?v=7" defer></script>'
+FILMJS = '<script src="/assets/film.js?v=8" defer></script>'
 
 # ------------------------------------------------------------------ pages
 def home():
@@ -220,8 +220,13 @@ def home():
 <div class="ctas r d4"><a class="btn" href="/contact/">Start an order {AR}</a><a class="btn ghost" href="#film">Watch how it works</a></div></div>
 <div class="cap r d4"><span class="t">{E(slides[0][1])}</span><div class="dots">{dots}</div></div></div></div></div><div class="scroll-cue" aria-hidden="true"></div>
 <div class="ticker" aria-hidden="true"><div class="tr">{tk}</div></div></section>
-<section class="sec"><div class="wrap"><span class="kicker r">Why Saweli</span><p class="statement">East Africa buys phones, solar and building materials from China. China buys coffee, sesame and frankincense from East Africa. Most of that trade still runs on trust and a phone number. <em>We put a checked record behind every order.</em></p>
-<div class="stats"><div class="r"><b data-count="5">0</b><span>Ports we ship to in East Africa</span></div><div class="r d1"><b data-count="4">0</b><span>Languages we work in</span></div><div class="r d2"><b data-count="6">0</b><span>Checks before your goods move</span></div><div class="r d3"><b data-count="1">0</b><span>Reference number for the whole order</span></div></div></div></section>
+<section class="duo" aria-label="Why Saweli"><div class="duo-grid">
+<figure class="duo-side cn">{img('cn_market', 'Wholesale market in Yiwu, China', 1600, "(max-width:900px) 100vw, 50vw")}<figcaption><span class="tag">China<i lang="zh">中国</i></span><h3>Factories and wholesale markets</h3><ul><li>Phones and electronics</li><li>Solar and power</li><li>Building materials</li></ul></figcaption></figure>
+<figure class="duo-side ea">{img('mog_port', 'Port of Mogadishu, Somalia', 1600, "(max-width:900px) 100vw, 50vw")}<figcaption><span class="tag">East Africa<i lang="zh">东非</i></span><h3>Ports and fast-growing markets</h3><ul><li>Coffee and sesame</li><li>Frankincense</li><li>Livestock and produce</li></ul></figcaption></figure>
+<svg class="duo-lanes" viewBox="0 0 1000 400" preserveAspectRatio="none" aria-hidden="true"><path id="dl1" d="M80 150 C 350 90, 650 90, 920 150"/><path id="dl2" d="M920 250 C 650 310, 350 310, 80 250"/><circle r="5" class="d1"><animateMotion dur="6s" repeatCount="indefinite"><mpath href="#dl1"/></animateMotion></circle><circle r="5" class="d1"><animateMotion dur="6s" begin="-3s" repeatCount="indefinite"><mpath href="#dl1"/></animateMotion></circle><circle r="5" class="d2"><animateMotion dur="7s" repeatCount="indefinite"><mpath href="#dl2"/></animateMotion></circle><circle r="5" class="d2"><animateMotion dur="7s" begin="-3.5s" repeatCount="indefinite"><mpath href="#dl2"/></animateMotion></circle></svg>
+<div class="duo-mark"><img src="/brand/saweli-mark.svg" alt="" width="96" height="50"></div></div>
+<div class="wrap duo-copy"><div class="head"><div><span class="kicker r">Why Saweli</span><h2 data-split>Most of this trade still runs on trust and a phone number</h2></div><p class="lede mut r">Saweli puts a checked record behind every order: the supplier, the goods, the shipment and the payment. You see each check as it happens.</p></div>
+<div class="stats"><div class="r">{ic('ship')}<b data-count="5">0</b><span>East African ports we ship to</span></div><div class="r d1">{ic('chat')}<b data-count="4">0</b><span>Languages we work in</span></div><div class="r d2">{ic('shield')}<b data-count="6">0</b><span>Checks before your goods move</span></div><div class="r d3">{ic('doc')}<b data-count="1">0</b><span>Reference for the whole order</span></div></div></div></section>
 <section class="sec tight" style="padding-top:0"><div class="wrap"><div class="head"><div><span class="kicker r">What we do</span><h2 data-split>Four services, one order</h2></div><p class="lede mut r">Use one of them or all four. Each order carries one reference, and you can follow it from the first message to the bank receipt.</p></div><div class="svc">{sv}</div></div></section>
 <section class="journey" style="--n:{len(STEPS)}"><div class="pin"><div class="wrap"><div class="jhead"><div><span class="kicker lt">The journey</span><h2>From a factory in China<br>to your shop</h2></div><div class="jprog"><i></i></div></div></div><div class="track">{jc}</div></div></section>
 <section class="sec tight" style="padding-bottom:40px"><div class="wrap"><div class="head" style="margin-bottom:0"><div><span class="kicker r">Watch</span><h2 data-split>How Saweli works, in one scroll</h2></div><p class="lede mut r">Keep scrolling and the film plays. Turn the sound on to hear it explained.</p></div></div></section>{film_block('scroll')}
